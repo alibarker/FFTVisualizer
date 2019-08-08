@@ -162,7 +162,7 @@ private:
         const auto output = fftOutputBuffer.getWritePointer (0);
         const auto maxOutput = fftMaxOutputBuffer.getWritePointer (0);
 
-        const auto decayRate = Decibels::decibelsToGain (-40.f * static_cast<float> (fft.getSize ()) / sampleRate);
+        const auto decayRate = Decibels::decibelsToGain (-40.f * static_cast<float> (fft.getSize ()) / static_cast<float> (sampleRate));
 
         for (auto n = 0 ; n < fftOutputBuffer.getNumSamples (); ++n)
         {
