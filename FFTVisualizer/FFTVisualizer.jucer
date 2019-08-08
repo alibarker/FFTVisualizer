@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="XjWIC8" name="FFTVisualizer" projectType="guiapp" jucerVersion="5.4.3">
+<JUCERPROJECT id="XjWIC8" name="FFTVisualizer" projectType="guiapp" jucerVersion="5.4.3"
+              projectLineFeed="&#10;">
   <MAINGROUP id="zTD0IX" name="FFTVisualizer">
     <GROUP id="{8E7EF92A-7F14-54E0-8B4D-4FAC2BE813E5}" name="Source">
       <FILE id="GESaha" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
