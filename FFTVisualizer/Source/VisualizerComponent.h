@@ -12,6 +12,7 @@
 
 #include "JuceHeader.h"
 #include "Visualizer.h"
+#include "Utilities.h"
 
 class VisualizerComponent : public Component
 {
@@ -21,10 +22,10 @@ public:
         fftInputBuffer.setSize (1, visualizer.getNumBins (), false, true);
         maxInputBuffer.setSize (1, visualizer.getNumBins (), false, true);
 
-        redrawTimer.setCallbackFunction ([this] () { update (); });
+        redrawTimer.setCallback ([this] () { update (); });
         redrawTimer.startTimerHz (60);
 
-        maxResetTimer.setCallbackFunction ([this] () { resetMax (); });
+        maxResetTimer.setCallback ([this] () { resetMax (); });
 
         addAndMakeVisible (fftGraph);
         addAndMakeVisible (maxGraph);
@@ -140,8 +141,8 @@ private:
     FftGraph fftGraph;
     MaxGraph maxGraph;
 
-    MiscUtils::LambdaTimer redrawTimer;
-    MiscUtils::LambdaTimer maxResetTimer;
+    LambdaTimer redrawTimer;
+    LambdaTimer maxResetTimer;
 
     void update ()
     {
