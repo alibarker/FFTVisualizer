@@ -9,6 +9,8 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "VisualizerComponent.h"
+#include "Visualizer.h"
 
 //==============================================================================
 /*
@@ -32,8 +34,8 @@ public:
     void resized() override;
 
 private:
-    //==============================================================================
-    // Your private member variables go here...
+    Visualizer visualizer {12};
+    VisualizerComponent visualizerComponent {visualizer};
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
