@@ -7,6 +7,10 @@
       <FILE id="GESaha" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="cJ9itz" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
+      <FILE id="HLJMGF" name="Visualizer.cpp" compile="1" resource="0" file="Source/Visualizer.cpp"/>
+      <FILE id="OHxxRD" name="Visualizer.h" compile="0" resource="0" file="Source/Visualizer.h"/>
+      <FILE id="ZOsABq" name="VisualizerComponent.h" compile="0" resource="0"
+            file="Source/VisualizerComponent.h"/>
       <FILE id="KXtpFR" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>
   </MAINGROUP>

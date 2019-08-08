@@ -415,6 +415,9 @@
     <ClCompile Include="..\..\Source\MainComponent.cpp">
       <Filter>FFTVisualizer\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Visualizer.cpp">
+      <Filter>FFTVisualizer\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp">
       <Filter>FFTVisualizer\Source</Filter>
     </ClCompile>
@@ -2317,6 +2320,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\MainComponent.h">
+      <Filter>FFTVisualizer\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Visualizer.h">
+      <Filter>FFTVisualizer\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\VisualizerComponent.h">
       <Filter>FFTVisualizer\Source</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\alibarker\SDKs\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
