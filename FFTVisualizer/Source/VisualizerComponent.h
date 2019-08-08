@@ -178,16 +178,21 @@ private:
             const auto nextBin = bin + 1 < numBins ? bin + 1 : bin;
             const auto posInBin = binPos - bin;
 
-            const auto lower = getRelativeDbValue (fft[bin], numBins);
-            const auto upper = getRelativeDbValue (fft[nextBin], numBins);
-
-            const auto interpolatedValue = lower - posInBin * (lower - upper);
+            const auto interpolatedValue = getInterpolatedDbValue (fft[bin], fft[nextBin], posInBin, numBins);
             const auto smoothedValue = 0.5f * (previousValue + interpolatedValue);
 
             previousValue = smoothedValue;
 
             destination [i] = smoothedValue;
         }
+    }
+
+    static float getInterpolatedDbValue (float lowerBinValue, float upperBinValue, float posInBin, int numBins)
+    {
+        const auto lower = getRelativeDbValue (lowerBinValue, numBins);
+        const auto upper = getRelativeDbValue (upperBinValue, numBins);
+
+        return lower - posInBin * (lower - upper);
     }
 
     static float getRelativeDbValue (float fftValue, int numBins)
