@@ -37,6 +37,7 @@ private:
     Visualizer visualizer {12};
     VisualizerComponent visualizerComponent {visualizer};
 
+    AudioBuffer<float> summingBuffer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
