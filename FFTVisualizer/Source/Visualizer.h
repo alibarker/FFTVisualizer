@@ -12,45 +12,6 @@
 
 #include "JuceHeader.h"
 
-struct Fifo
-{
-    void addToFifo (const float* someData, int numItems)
-    {
-        int start1, size1, start2, size2;
-        abstractFifo.prepareToWrite (numItems, start1, size1, start2, size2);
-
-        if (size1 > 0)
-            copySomeData (myBuffer.data () + start1, someData, size1);
-
-        if (size2 > 0)
-            copySomeData (myBuffer.data () + start2, someData + size1, size2);
-
-        abstractFifo.finishedWrite (size1 + size2);
-    }
-
-    void readFromFifo (float* someData, int numItems)
-    {
-        int start1, size1, start2, size2;
-        abstractFifo.prepareToRead (numItems, start1, size1, start2, size2);
-
-        if (size1 > 0)
-            copySomeData (someData, myBuffer.data() + start1, size1);
-
-        if (size2 > 0)
-            copySomeData (someData + size1, myBuffer.data() + start2, size2);
-
-        abstractFifo.finishedRead (size1 + size2);
-    }
-
-    void copySomeData (float* dest, const float* source, int numItems) const
-    {
-        FloatVectorOperations::copy (dest, source, numItems);
-    }
-
-    AbstractFifo abstractFifo { 4096 };
-    std::array<float, 4096> myBuffer{};
-};
-
 class Visualizer : public Component, public Thread
 {
 public:
@@ -229,9 +190,50 @@ private:
         return inputBuffer.getNumSamples () - readPointer + writePointer;
     }
 
-    double sampleRate {0.};
+
+    struct Fifo
+    {
+        void addToFifo (const float* someData, int numItems)
+        {
+            int start1, size1, start2, size2;
+            abstractFifo.prepareToWrite (numItems, start1, size1, start2, size2);
+
+            if (size1 > 0)
+                copySomeData (myBuffer.data () + start1, someData, size1);
+
+            if (size2 > 0)
+                copySomeData (myBuffer.data () + start2, someData + size1, size2);
+
+            abstractFifo.finishedWrite (size1 + size2);
+        }
+
+        void readFromFifo (float* someData, int numItems)
+        {
+            int start1, size1, start2, size2;
+            abstractFifo.prepareToRead (numItems, start1, size1, start2, size2);
+
+            if (size1 > 0)
+                copySomeData (someData, myBuffer.data() + start1, size1);
+
+            if (size2 > 0)
+                copySomeData (someData + size1, myBuffer.data() + start2, size2);
+
+            abstractFifo.finishedRead (size1 + size2);
+        }
+
+        void copySomeData (float* dest, const float* source, int numItems) const
+        {
+            FloatVectorOperations::copy (dest, source, numItems);
+        }
+
+        AbstractFifo abstractFifo { 4096 };
+        std::array<float, 4096> myBuffer{};
+    };
 
     Fifo fifo;
+
+    double sampleRate {0.};
+
     AudioBuffer<float> processingBuffer;
     AudioBuffer<float> fftOutputBuffer;
     AudioBuffer<float> fftMaxOutputBuffer;
