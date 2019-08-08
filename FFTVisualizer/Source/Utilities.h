@@ -33,11 +33,6 @@ struct LambdaTimer : public juce::Timer
 
 namespace RangeUtils
 {
-    static float logValueToNormalized (float fullRangeLogValue, float logRangeMin, float logRangeMax)
-    {
-        return std::log (fullRangeLogValue / logRangeMin) / std::log (logRangeMax / logRangeMin);
-    }
-
     static float normalizedToLogRange (float normVal, float logRangeMin, float logRangeMax)
     {
         const auto logVal = std::exp (normVal * std::log (logRangeMax / logRangeMin)) * logRangeMin;

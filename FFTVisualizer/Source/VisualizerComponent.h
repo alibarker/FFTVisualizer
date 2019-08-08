@@ -17,7 +17,7 @@
 class VisualizerComponent : public Component
 {
 public:
-    VisualizerComponent (Visualizer& visualizer) : Component ("FFTDisplay"), visualizer (visualizer)
+    explicit VisualizerComponent (Visualizer& visualizer) : Component ("FFTDisplay"), visualizer (visualizer)
     {
         fftInputBuffer.setSize (1, visualizer.getNumBins (), false, true);
         maxInputBuffer.setSize (1, visualizer.getNumBins (), false, true);
@@ -61,7 +61,7 @@ private:
             const auto numSegments = 50;
             const auto numPixelsPerSegment = static_cast<int> (std::ceil (static_cast<float> (getWidth ()) / numSegments));
 
-            for (int i = 0; i < numSegments; ++i)
+            for (auto i = 0; i < numSegments; ++i)
             {
                 const auto start = i * numPixelsPerSegment;
                 const auto end = jmin (start + numPixelsPerSegment + 1, getWidth ());
@@ -70,11 +70,11 @@ private:
             }
         }
 
-        void drawLineSegment (Graphics& g, int start, int end)
+        void drawLineSegment (Graphics& g, int start, int end) const
         {
             Path path;
 
-            auto buffer = renderBuffer.getReadPointer (0);
+            const auto buffer = renderBuffer.getReadPointer (0);
 
             const auto height = getHeight ();
 
@@ -83,7 +83,7 @@ private:
 
             path.startNewSubPath ({prevX, prevY});
 
-            for (int i = start + 1; i < end; ++i)
+            for (auto i = start + 1; i < end; ++i)
             {
                 const auto x = static_cast<float> (i);
                 const auto y = height - buffer [i] * height;
@@ -121,11 +121,11 @@ private:
             g.setColour (Colours::whitesmoke.withAlpha (0.2f));
             const auto height = static_cast<float> (getHeight ());
 
-            auto buffer = renderBuffer.getReadPointer (0);
+            const auto buffer = renderBuffer.getReadPointer (0);
 
-            for (int i = 0; i < getWidth (); ++i)
+            for (auto i = 0; i < getWidth (); ++i)
             {
-                const auto top = getHeight () - buffer[i] * height;
+                const auto top = static_cast<float> (getHeight ()) - buffer[i] * height;
                 g.drawVerticalLine (i, top, height);
             }
         }
@@ -165,15 +165,15 @@ private:
     static void updateRenderBuffer (AudioBuffer<float>& dest, const AudioBuffer<float>& source, int width, int numBins)
     {
         const auto fft = source.getReadPointer (0);
-        auto destination = dest.getWritePointer (0);
+        const auto destination = dest.getWritePointer (0);
 
         auto previousValue = getRelativeDbValue (fft[0], numBins);
 
-        for (int i = 0; i < width; ++i)
+        for (auto i = 0; i < width; ++i)
         {
-            const auto normPos = static_cast<float> (i) / width;
+            const auto normPos = static_cast<float> (i) / static_cast<float> (width);
 
-            const auto binPos = RangeUtils::normalizedToLogRange (normPos, 1.f, numBins);
+            const auto binPos = RangeUtils::normalizedToLogRange (normPos, 1.f, static_cast<float> (numBins));
             const auto bin = static_cast<int> (std::floor (binPos));
             const auto nextBin = bin + 1 < numBins ? bin + 1 : bin;
             const auto posInBin = binPos - bin;
@@ -197,7 +197,7 @@ private:
 
     static float getRelativeDbValue (float fftValue, int numBins)
     {
-        const auto scaledValue = fftValue / (2 * numBins);
+        const auto scaledValue = fftValue / static_cast<float> (2 * numBins);
         const auto dBValue = Decibels::gainToDecibels (scaledValue, -100.f);
 
         return dBValue / 100.f + 1.f;

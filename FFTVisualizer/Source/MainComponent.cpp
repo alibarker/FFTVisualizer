@@ -38,7 +38,7 @@ MainComponent::~MainComponent()
 }
 
 //==============================================================================
-void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
+void MainComponent::prepareToPlay (int /*samplesPerBlockExpected*/, double sampleRate)
 {
     visualizer.setSampleRate (sampleRate);
 }

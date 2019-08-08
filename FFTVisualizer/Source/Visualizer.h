@@ -20,10 +20,10 @@ struct Fifo
         abstractFifo.prepareToWrite (numItems, start1, size1, start2, size2);
 
         if (size1 > 0)
-            copySomeData (myBuffer + start1, someData, size1);
+            copySomeData (myBuffer.data () + start1, someData, size1);
 
         if (size2 > 0)
-            copySomeData (myBuffer + start2, someData + size1, size2);
+            copySomeData (myBuffer.data () + start2, someData + size1, size2);
 
         abstractFifo.finishedWrite (size1 + size2);
     }
@@ -34,27 +34,27 @@ struct Fifo
         abstractFifo.prepareToRead (numItems, start1, size1, start2, size2);
 
         if (size1 > 0)
-            copySomeData (someData, myBuffer + start1, size1);
+            copySomeData (someData, myBuffer.data() + start1, size1);
 
         if (size2 > 0)
-            copySomeData (someData + size1, myBuffer + start2, size2);
+            copySomeData (someData + size1, myBuffer.data() + start2, size2);
 
         abstractFifo.finishedRead (size1 + size2);
     }
 
-    void copySomeData (float* dest, const float* source, int numItems)
+    void copySomeData (float* dest, const float* source, int numItems) const
     {
         FloatVectorOperations::copy (dest, source, numItems);
     }
 
     AbstractFifo abstractFifo { 4096 };
-    float myBuffer[4096];
+    std::array<float, 4096> myBuffer{};
 };
 
 class Visualizer : public Component, public Thread
 {
 public:
-    Visualizer (int fftOrder) :
+    explicit Visualizer (int fftOrder) :
         Thread ("fft"),
         fft (fftOrder),
         windowingFunction (static_cast<size_t> (fft.getSize ()), dsp::WindowingFunction<float>::hamming)
@@ -73,8 +73,8 @@ public:
         stopThread (3000);
     }
 
-    void setSampleRate (double fs)  {     sampleRate = fs;    }
-    double getSampleRate ()         {     return sampleRate;    }
+    void setSampleRate (double fs) {     sampleRate = fs;    }
+    double getSampleRate () const {     return sampleRate;    }
 
     int getNumBins () const
     {
@@ -87,7 +87,7 @@ public:
         fifo.addToFifo (samples, numSamples);
     }
 
-    void copyCurrentFft (float* samples, int numSamples)
+    void copyCurrentFft (float* samples, int numSamples) const
     {
         jassert (numSamples == fft.getSize () / 2);
         ScopedLock lock (processingLock);
@@ -111,7 +111,7 @@ public:
         maxHasChanged = true;
     }
 
-    void copyCurrentMax (float* samples, int numSamples)
+    void copyCurrentMax (float* samples, int numSamples) const
     {
         jassert (numSamples == fft.getSize () / 2);
         ScopedLock lock (processingLock);
@@ -197,13 +197,13 @@ private:
     void applyBalisticsAndCopyToOutput ()
     {
         ScopedLock sl (processingLock);
-        auto input = processingBuffer.getWritePointer (0);
-        auto output = fftOutputBuffer.getWritePointer (0);
-        auto maxOutput = fftMaxOutputBuffer.getWritePointer (0);
+        const auto input = processingBuffer.getWritePointer (0);
+        const auto output = fftOutputBuffer.getWritePointer (0);
+        const auto maxOutput = fftMaxOutputBuffer.getWritePointer (0);
 
-        const auto decayRate = Decibels::decibelsToGain (-40.f * fft.getSize () / sampleRate);
+        const auto decayRate = Decibels::decibelsToGain (-40.f * static_cast<float> (fft.getSize ()) / sampleRate);
 
-        for (int n = 0 ; n < fftOutputBuffer.getNumSamples (); ++n)
+        for (auto n = 0 ; n < fftOutputBuffer.getNumSamples (); ++n)
         {
             if (input[n] > output[n])
             {
@@ -221,7 +221,7 @@ private:
         }
     }
 
-    int getWrappedDistanceBetweenPointers ()
+    int getWrappedDistanceBetweenPointers () const
     {
         if (writePointer > readPointer)
             return writePointer - readPointer;
